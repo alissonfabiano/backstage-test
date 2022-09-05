@@ -1,0 +1,151 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: evo-api
+  title: EVO Microservice
+  description: Create a new EVO Microservice using ESW best practices and the latest .NET (v. 1.0.4)
+  tags:
+    - dotnet
+spec:
+  owner: group:platform
+  type: service
+  parameters:
+    - title: Fill in some details
+      required:
+        - domainName
+        - serviceName
+        - owner
+      properties:
+        domainName:
+          title: Domain Name
+          type: string
+          description: The domain this microservice belongs to
+          ui:autofocus: true
+          enum:
+            - analytics
+            - architecture
+            - brandcomms
+            - checkout
+            - devops
+            - esp
+            - finance
+            - logistics
+            - nike
+            - nikesnkrs
+            - order
+            - payments
+            - pricing
+            - promotion
+            - retailer
+            - returns
+            - security
+            - secint
+            - shopper
+            - tooling
+            - tradecomp
+        serviceName:
+          title: Service Name
+          type: string
+          description: |-
+            A unique name for this microservice (e.g.: Shipping)
+        enableAuthO:
+          title: Enable AuthO on API
+          type: boolean
+          default: true
+          description: |-
+            Enable AuthO middleware and configuration (More info here: https://eshopworld.atlassian.net/wiki/spaces/SecEng/pages/3291323350/Adding+AuthO+to+an+API)
+        enableCors:
+          title: Enable CORS on API
+          type: boolean
+          default: false
+        hasConsumer:
+          title: Add Consumer
+          type: boolean
+          default: false
+          description: Add a Kafka consumer worker
+        hasProducer:
+          title: Add Producer
+          type: boolean
+          default: false
+          description: Add a Kafka producer worker that leverages the Cosmos DB Change Feed
+        owner:
+          title: Owner team
+          type: string
+          description: The Team owning the application
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
+        pipelineFolder:
+          title: Pipeline folder
+          type: string
+          default: ./
+          description: Path where would like create the Pipeline
+        pipelineFilePath:
+          title: Pipeline file path
+          type: string
+          default: ./pipeline.yml
+          description: Path where the Pipeline file is located in the Repository
+  steps:
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./template
+        values:
+          domainName: ${{ parameters.domainName | capitalize }}
+          serviceName: ${{ parameters.serviceName }}
+          enableAuthO: ${{ parameters.enableAuthO }}
+          enableCors: ${{ parameters.enableCors }}
+          hasConsumer: ${{ parameters.hasConsumer }}
+          hasProducer: ${{ parameters.hasProducer }}
+          owner: ${{ parameters.owner }}
+
+    - id: delete-files-autho
+      name: Skip AuthO
+      if: ${{ not parameters.enableAuthO }}
+      action: fs:delete
+      input:
+        files:
+          - "./src/${{ parameters.domainName | capitalize }}.${{ parameters.serviceName }}.WebApiService/authorisationsets.json"
+          - "./src/${{ parameters.domainName | capitalize }}.${{ parameters.serviceName }}.WebApiService/permissions.json"
+
+    - id: delete-files-consumer
+      name: Skip Consumer worker
+      if: ${{ not parameters.hasConsumer }}
+      action: fs:delete
+      input:
+        files:
+          - "./src/${{ parameters.domainName | capitalize }}.${{ parameters.serviceName }}.Consumer/"
+          - "./src/Tests/${{ parameters.domainName | capitalize }}.${{ parameters.serviceName }}.Consumer.Unit.Tests/"
+
+    - id: delete-files-producer
+      name: Skip Producer worker
+      if: ${{ not parameters.hasProducer}}
+      action: fs:delete
+      input:
+        files:
+          - "./src/${{ parameters.domainName | capitalize }}.${{ parameters.serviceName }}.Producer/"
+          - "./src/Tests/${{ parameters.domainName | capitalize }}.${{ parameters.serviceName }}.Producer.Unit.Tests/"
+
+    - id: publish
+      name: Publish
+      action: publish:azure
+      input:
+        allowedHosts: ["dev.azure.com"]
+        repoUrl: "dev.azure.com?repo=${{parameters.domainName | lower }}-${{parameters.serviceName | lower }}-api&owner=evo-core&organization=eshopworld"
+        description: "Initial Commit"
+
+    - id: create-pipeline
+      name: Create Pipeline
+      action: azuredevops:pipeline:create
+      input:
+        host: dev.azure.com
+        name: ${{parameters.domainName | lower }}-${{parameters.serviceName | lower }}-api
+        folder: ${{ parameters.pipelineFolder }}
+        project: evo-core
+        organization: eshopworld
+        pipelineFilePath: ${{ parameters.pipelineFilePath }}
+        pipelineFileType: yaml
+        repositoryName: ${{parameters.domainName | lower }}-${{parameters.serviceName | lower }}-api
+        repositoryType: azureReposGit
