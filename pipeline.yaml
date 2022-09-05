@@ -1,8 +1,8 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: evo-api
-  title: EVO Microservice
+  name: evo-api-demo
+  title: "[DEMO] - EVO Microservice"
   description: Create a new EVO Microservice using ESW best practices and the latest .NET (v. 1.0.4)
   tags:
     - dotnet
