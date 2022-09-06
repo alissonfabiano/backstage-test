@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: create-pipeline-1
-  title: Test A
+  title: Test B
   description: scaffolder action to create pipeline on azure devops
 spec:
   owner: group:platform
@@ -31,7 +31,7 @@ spec:
         folder: ${{ parameters.folder }}
         project: evo-core
         organization: eshopworld
-        pipelineFilePath: pipeline.yaml
+        pipelineFilePath: ./pipeline.yaml
         pipelineFileType: yaml
         repositoryName: ${{ parameters.repositoryName }}
         repositoryType: azureReposGit
