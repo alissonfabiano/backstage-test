@@ -1,8 +1,8 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: create-pipeline
-  title: Test
+  name: create-pipeline-1
+  title: Test A
   description: scaffolder action to create pipeline on azure devops
 spec:
   owner: group:platform
@@ -27,7 +27,7 @@ spec:
       action: azuredevops:pipeline:create
       input:
         host: dev.azure.com
-        name: ${{ parameters.name }}
+        name: ${{ parameters.repositoryName }}
         folder: ${{ parameters.folder }}
         project: evo-core
         organization: eshopworld
