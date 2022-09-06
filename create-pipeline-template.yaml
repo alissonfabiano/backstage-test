@@ -64,13 +64,12 @@ spec:
       name: Create Pipeline
       action: azuredevops:pipeline:create
       input:
-        host: ${{ parameters.host }}
+        host: dev.azure.com
         name: ${{ parameters.name }}
         folder: ${{ parameters.folder }}
-        project: ${{ parameters.project }}
-        organization: ${{ parameters.organization }}
-        pipelineFilePath: ${{ parameters.pipelineFilePath }}
-        pipelineFileType: ${{ parameters.pipelineFileType }}
-        repositoryId: ${{ parameters.repositoryId }}
+        project: evo-core
+        organization: eshopworld
+        pipelineFilePath: pipeline.yaml
+        pipelineFileType: yaml
         repositoryName: ${{ parameters.repositoryName }}
-        repositoryType: ${{ parameters.repositoryType }}
+        repositoryType: azureReposGit
