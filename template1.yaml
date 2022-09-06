@@ -1,7 +1,7 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: create-pipeline-1
+  name: create-pipeline-2
   title: Test B
   description: scaffolder action to create pipeline on azure devops
 spec:
