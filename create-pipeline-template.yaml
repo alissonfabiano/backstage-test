@@ -1,7 +1,7 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: create-pipeline-on-azure-devops
+  name: create-pipeline-on-azure-devops-v2
   title: My custom create pipeline action
   description: scaffolder action to create pipeline on azure devops
 spec:
