@@ -10,14 +10,8 @@ spec:
   parameters:
     - title: Create Pipeline
       required:
-        - name
         - folder
-        - project
-        - organization
-        - pipelineFilePath
-        - pipelineFileType
         - repositoryName
-        - repositoryType
       properties:
         folder:
           title: Folder
