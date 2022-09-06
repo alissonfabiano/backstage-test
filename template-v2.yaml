@@ -1,8 +1,8 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: create-pipeline-on-azure-devops-v2
-  title: My custom create pipeline action
+  name: create-pipeline
+  title: Test
   description: scaffolder action to create pipeline on azure devops
 spec:
   owner: group:platform
@@ -19,46 +19,14 @@ spec:
         - repositoryName
         - repositoryType
       properties:
-        host:
-          title: Host
-          type: string
-          description: AzureDevOps host
-        name:
-          title: Name
-          type: string
-          description: Name of the pipeline
         folder:
           title: Folder
           type: string
           description: Folder of the pipeline
-        project:
-          title: Project Name
-          type: string
-          description: Name of the project
-        organization:
-          title: Organization Name
-          type: string
-          description: Name of the organization
-        pipelineFilePath:
-          title: Pipeline File Path
-          type: string
-          description: Path of the pipeline file
-        pipelineFileType:
-          title: Pipeline File Type
-          type: string
-          description: Type of the pipeline file'
-        repositoryId:
-          title: Repository Id
-          type: string
-          description: Id of the repository
         repositoryName:
           title: Repository Name
           type: string
           description: Name of the repository
-        repositoryType:
-          title: Repository Type
-          type: string
-          description: Type of the repository
   steps:
     - id: create-pipeline
       name: Create Pipeline
